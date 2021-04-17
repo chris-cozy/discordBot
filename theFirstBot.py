@@ -10,9 +10,16 @@ import mysql.connector
 from mysql.connector import Error
 import youtube_dl
 
+#private variables for use, move to .env if making public
+bToken = #bot token
+guildName = #guild name
+channelName = #main channel name
+cogsPath = #cogs path
+pyEx = #python extension
+
+
 #connection to discord
 client = commands.Bot(command_prefix ='#', intents = discord.Intents.all())
-#removes help command to allow for custom
 client.remove_command("help")
 
 #cycles in order; status =cycle(['Minecraft', 'Stardew Valley', 'League of Legends', 'Roblox', 'Tiny Royale'])
@@ -37,7 +44,6 @@ custEmoji = [
     '<:cats:818679736125227008>',
     '<:backhug:818679634739986443>',
     ]
-
 random_statements = [
     'I wonder if @Cozy has eaten today...',
     "It was so pretty outside " + random.choice(custEmoji),
@@ -66,7 +72,6 @@ acts = [
     discord.Activity(type=discord.ActivityType.watching, name= "'Jujutsu Kaisen' on CrunchyRoll"),
     ]
 
-
 #CONNECTS BOT
 @client.event
 async def on_ready():
@@ -85,8 +90,8 @@ async def help(ctx):
     em.add_field(name = "Main", value = "l, u, r")
 
     await ctx.send(embed = em)
-#Loading COGS, allows for the creation and inclusion/editing of functions without rerunning main file
-#Removes the need for Kaede to go offline when updating functions
+
+#Loading COGS, allows for the creation and inclusion/editing of functions without rerunning main file (would cause bot to go offline temporarily)
 #creates load command
 @client.command()
 async def l(ctx, extension):
@@ -99,25 +104,26 @@ async def u(ctx, extension):
     client.unload_extension(f'cogs.{extension}')
     await ctx.send(f'{extension} unloaded!')
 
-#reload cog command, very useful when updating functions
+#reload cog command, useful when updating functions
 @client.command()
 async def r(ctx, extension):
     client.reload_extension(f'cogs.{extension}')
     await ctx.send(f'{extension} reloaded!')
 
 #loads all extensions in the /cogs folder
-for filename in os.listdir('./cogs'):
-    if filename.endswith('.py'):
+for filename in os.listdir(cogsPath):
+    if filename.endswith(pyEx):
         client.load_extension(f'cogs.{filename[:-3]}')
         print(f'Extensions loaded!')
 
 
-#checks allow only people with certain permissions to use command
-#can create a custom check function that can run before command runs, with any type of requirement, so whatever I say goes
-#this can be useful if I have level restricted commands
-#could also be useful for 'paid' commands
+#checks allow only people with certain permissions to use command, can be useful if I have level restricted commands; could also be useful for 'paid' commands
 
 #COMMANDS @client.command()
+#CHECKS @commands.check(), place under command declaration @client.command()
+#checks can also be def functions that return true or false
+#can create a custom check function that can run before command runs, with any type of requirement
+
 #TASK LOOPS
 #updates every random minute number between 10 and 30
 @tasks.loop(minutes = random.randint(10,30))
@@ -128,14 +134,10 @@ async def change_task():
 @tasks.loop(minutes= random.randint(15,35))
 async def random_statement():
     for guild in client.guilds:
-        if str(guild) == #guildName:
+        if str(guild) == guildName:
             for channel in guild.channels:
-                if str(channel) == #mainChannelName:
+                if str(channel) == channelName:
                     await channel.send(random.choice(random_statements))
 
 
-    
-#adding encouraging statements
-#Making a leveling system
-#if releasing this bot, move this to .env file
-client.run(#botToken)
+client.run(bToken)

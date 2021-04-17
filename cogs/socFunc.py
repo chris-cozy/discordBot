@@ -45,7 +45,12 @@ actEmoji = [
     '<:cutebear:817992591563685999>',
     '<:bearlove:817992135084605450>'
     ]
+#neural network will replace most of this hardcode
 
+#private variables for use, move to .env if making code public
+zenquotes_apiLink = #zenquotes api link
+botName = #bot name
+ 
 
 item_images = [
     "https://i.postimg.cc/J07ysb3Q/cityalley.png",
@@ -103,7 +108,7 @@ sad_words = ["i'm sad", "i'm depressed", "i'm unhappy", "i'm angry", "i'm misera
 userGreets = ["#hello", "#hey", "#hi"]
 
 def get_quote(self):
-        response = requests.get(#zenquotesAPI)
+        response = requests.get(zenquotes_apiLink)
         json_data = json.loads(response.text)
         quote = json_data[0]['q'] + " -" + json_data[0]['a']
         return(quote)
@@ -138,9 +143,6 @@ class socFunc(commands.Cog):
         embed.set_image(url = random.choice(item_images))
         await ctx.send(embed = embed)
 
-    @commands.command()
-    async def ran(self, ctx):
-        await ctx.send(random.choice(custEmoji))
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -149,12 +151,12 @@ class socFunc(commands.Cog):
 
         msg = message.content.lower()
 
-        if msg.startswith("Kaede"):
+        if msg.startswith(botName):
             await message.channel.send("Yes??")
 
 
         if any(word in msg for word in userGreets):
-            if message.author.id == #user-id:
+            if message.author.id == 407943427616145409:
                 await message.channel.send('Creator <:flower:817984275332071444> ' + random.choice(greets))
             else:
                 await message.channel.send(random.choice(greets))
@@ -168,7 +170,7 @@ class socFunc(commands.Cog):
         if any(word in msg for word in sleep):
             await message.channel.send(random.choice(sleepBot) + self.ctx.author.mention)
 
-        if "kaede" in message.content.lower():
+        if botName in message.content.lower():
             await message.add_reaction(random.choice(objEmoji))
 
         #overwriting on_message stops commands from being processes, this line fixes that

@@ -10,9 +10,14 @@ import random
 import youtube_dl
 
 current = None
+#private variables for use, move to .env if making public
+songlistFile = #songlist json file
+songFile = #song.mp3
+voiceChannelName = #voice channel name
+
 
 async def song_list():
-    with open("songlist.json", "r") as f:
+    with open(songlistFile, "r") as f:
         songs = json.load(f)
     return songs
 
@@ -20,25 +25,21 @@ class musicFunc(commands.Cog):
     #allows us to connect to the client by passing in client as argument
     def __init__(self, client):
         self.client = client
-
-    #The equivalent to @client.event for cogs
-    #must pass in self as the first parameter of every function in the class
     
     @commands.command()
     async def song(self, ctx, url: str):
         current = url
         await ctx.channel.purge(limit = 1)
         await ctx.send("This'll only take a second...")
-        song_there = os.path.isfile("song.mp3")
+        song_there = os.path.isfile(songFile)
         try:
             if song_there:
-                os.remove("song.mp3")
+                os.remove(songFile)
         except PermissionError:
             await ctx.send("Wait for the current playing music to end or use the 'stop' command")
             return
 
-        #voiceChannel = discord.utils.get(ctx.guild.voice_channels, name= 'primary🎴')
-        #await voiceChannel.connect()
+
         voice = discord.utils.get(self.client.voice_clients, guild = ctx.guild)
         if voice is None:
             await ctx.send("Put me in the voice channel first!!")
@@ -58,14 +59,14 @@ class musicFunc(commands.Cog):
         #somewhere down here says a sad word and causes an encouraging statements    
         for file in os.listdir("./"):
             if file.endswith(".mp3"):
-                os.rename(file, "song.mp3")
-        voice.play(discord.FFmpegPCMAudio("song.mp3"))
+                os.rename(file, songFile)
+        voice.play(discord.FFmpegPCMAudio(songFile))
         await ctx.channel.purge(limit = 1)
         await ctx.send(f"Playing - {url}")
 
     @commands.command()
     async def connect(self, ctx):
-        voiceChannel = discord.utils.get(ctx.guild.voice_channels, name= #channelName)
+        voiceChannel = discord.utils.get(ctx.guild.voice_channels, name= voiceChannelName)
         await voiceChannel.connect()
 
     @commands.command()
@@ -88,13 +89,13 @@ class musicFunc(commands.Cog):
 
     @commands.command()
     async def play(self, ctx):
-        song_there = os.path.isfile("song.mp3")
+        song_there = os.path.isfile(songFile)
         voice = discord.utils.get(self.client.voice_clients, guild = ctx.guild)
         if voice.is_paused():
             voice.resume()
             await ctx.channel.purge(limit = 1)
         elif song_there:
-            voice.play(discord.FFmpegPCMAudio("song.mp3"))
+            voice.play(discord.FFmpegPCMAudio(songFile))
             await ctx.channel.purge(limit = 1)
         else:
             await ctx.send("The playback isn't even paused yet >:(")
@@ -135,18 +136,18 @@ class musicFunc(commands.Cog):
         else:
             songs[title] = url
             
-        with open("songlist.json", "w") as f:
+        with open(songlistFile, "w") as f:
             json.dump(songs,f)
         await ctx.send(f"{title} added!!")
         
     @commands.command()
     async def loop(self, ctx, amount = 5):
-        song_there = os.path.isfile("song.mp3")
+        song_there = os.path.isfile(songFile)
         voice = discord.utils.get(self.client.voice_clients, guild = ctx.guild)
         x = amount
         while x > 0:
             if song_there:
-                voice.play(discord.FFmpegPCMAudio("song.mp3"))
+                voice.play(discord.FFmpegPCMAudio(songFile))
                 await ctx.channel.purge(limit = 1)
                 while voice.is_playing():
                     pass

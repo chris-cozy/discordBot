@@ -5,17 +5,20 @@ import requests
 import json
 import random
 
-#if releasing this bot move this to .env file
-tenor_key = #tenorKey
+#private variables for use, move to .env file if releasing public
+tenorKey = #tenor key
+tenorLink = #tenor link
+
 
 def get_gif(self, search):
-    apikey = #apiKey
+    apikey = tenorkey
     lmt = 12
     #search
     search_term = f"anime {search}"
 
-    # get the top lmt GIFs for the search term
-    r = requests.get("https://g.tenor.com/v1/search?q=%s&key=%s&limit=%s" % (search_term, apikey, lmt))
+    # get the top <lmt> GIFs for the search term
+    r = requests.get(tenorLink % (search_term, apikey, lmt))
+
     if r.status_code == 200:
         # load the GIFs using the urls for the smaller GIF sizes
         gifs = json.loads(r.content)

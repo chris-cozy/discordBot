@@ -8,8 +8,12 @@ import requests
 import json
 import random
 
+#private variables for use, if making public move these to a .env
+cogsPath = #cogs path
+bankFile = #bank json file name
 
-os.chdir(#cogsFolderPath)
+
+os.chdir(cogsPath)
 item_images = [
     "https://i.postimg.cc/J07ysb3Q/cityalley.png",
     "https://i.postimg.cc/nrsJSrnJ/classroom.png",
@@ -34,7 +38,6 @@ item_images = [
     "https://i.postimg.cc/G3Nr8Fjh/waterfall.png",
     "https://i.postimg.cc/85XGbMQ4/windowclassroom.png"
     ]
-
 custEmoji = [
     '<:bearlove:817992135084605450>', 
     '<:cutebear:817992591563685999>',
@@ -62,13 +65,11 @@ mainshop = [
     {"name": "pc98 Vintage Card", "price": 50, "description": "A step into the nostalgia of Gameboy and pc98"}
     ]
 
-
-
 async def open_account(user):
     #loads bank users
     users = await bank_data()   
     #checks if user already has an account, if so, return False, 
-    #if not, creates account and adds to the mainbank.json file, the returns True
+    #if not, creates account and adds to mainbank.json, then returns True
     if str(user.id) in users:
         return False
     else:
@@ -76,14 +77,14 @@ async def open_account(user):
         users[str(user.id)]["wallet"] = 0
         users[str(user.id)]["bank"] = 0
     
-    with open("mainbank.json", "w") as f:
+    with open(bankFile, "w") as f:
         json.dump(users,f)
     return True
 
 
 async def bank_data():
     #opens json file and loads users
-    with open("mainbank.json", "r") as f:
+    with open(bankFile, "r") as f:
         users = json.load(f)
     return users
 
@@ -92,7 +93,7 @@ async def update_bank(user, change = 0, mode = "wallet"):
     users = await bank_data()
     users[str(user.id)][mode] += change
 
-    with open("mainbank.json", "w") as f:
+    with open(bankFile, "w") as f:
         json.dump(users,f)
 
     bal = [users[str(user.id)]["wallet"],users[str(user.id)]["bank"]]
@@ -144,7 +145,7 @@ async def buy_item(user, item_name, amount):
         users[str(user.id)]["Inventory"] = [obj]
 
     #updates mainbank file
-    with open("mainbank.json", "w") as f:
+    with open(bankFile, "w") as f:
         json.dump(users,f)
     
     #updates user wallet amount to reflect purchase
@@ -188,7 +189,7 @@ async def sell_this(user, item_name, amount, price = None):
 
     except:
         return [False, 3]
-    with open("mainbank.json", "w") as f:
+    with open(bankFile, "w") as f:
         json.dump(users,f)
 
     await update_bank(user,cost,"wallet")
@@ -328,7 +329,7 @@ class econFunc(commands.Cog):
             await ctx.send("You got it next time, maybe...")
         
 
-    #should probably be used by Kaede
+    #should be used by the bot or restricted with checks
     @commands.command()
     async def gift(self, ctx):
         await open_account(ctx.author)
@@ -343,7 +344,7 @@ class econFunc(commands.Cog):
         users[str(user.id)]["wallet"] += earnings
 
         #updates/saves the info
-        with open("mainbank.json", "w") as f:
+        with open(bankFile, "w") as f:
             json.dump(users,f)
 
     @commands.command()

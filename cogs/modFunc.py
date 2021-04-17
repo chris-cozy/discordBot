@@ -8,6 +8,10 @@ import requests
 import json
 import random
 
+#private variables, move to a .env if making public
+versionFile = #version json file
+
+
 commandsList = """
 Here's a list of the current commands I know:
 #cmds
@@ -21,9 +25,9 @@ Here's a list of the current commands I know:
 #kick <user> <reason>
 #ban <user> <reason>
 #unban <user>
-#load
-#unload
-#reload
+#l
+#u
+#r
 #play <youtube music url>
 #pause
 #resume
@@ -33,7 +37,7 @@ It's not much atm but hopefully Creator will teach me more!!
 """
 
 async def version_hist():
-    with open("versions.json", "r") as f:
+    with open(versionFile, "r") as f:
         versions = json.load(f)
     return versions
 
@@ -44,21 +48,23 @@ class modFunc(commands.Cog):
         self.client = client
 
     
-    #The equivalent to @client.event for cogs
     #must pass in self as the first parameter of every function in the class
     #@commands.Cog.listener
     #The equivalent to @client.command() for cogs
     
+    @commands.has_permissions(kick_members = True)
     @commands.command()
     async def kick(self, ctx, member: discord.Member, *, reason = None):
         await ctx.send("kicked " + member + reason)
         await member.kick(reason = reason)
 
+    @commands.has_permissions(kick_members = True)
     @commands.command()
     async def ban(self, ctx, member: discord.Member, *, reason = None):
         await ctx.send(f"banned {member} {reason}")
         await member.ban(reason = reason)
 
+    @commands.has_permissions(kick_members = True)
     @commands.command()
     async def unban(self, ctx, *, member):
         #list of banned users in the guild
@@ -116,12 +122,10 @@ class modFunc(commands.Cog):
             versions[str(version)] = {}
             versions[str(version)]["description"] = description
 
-        with open("versions.json", "w") as f:
+        with open(versionFile, "w") as f:
             json.dump(versions,f)
         
         await ctx.send(f"The {version} update was logged for me, thanks Cozy!!")
-
-
 
 
 #setup function to connect cog to bot, initializes by passing in instance of the class
