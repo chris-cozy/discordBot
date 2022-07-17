@@ -1,8 +1,8 @@
 import discord
 from discord.ext import commands, tasks
 from discord.ext.commands import Bot
-import os #allows file manipulation
-from itertools import cycle #allows us to cycle through a list
+import os
+from itertools import cycle
 import requests
 import json
 import random
@@ -10,7 +10,8 @@ import mysql.connector
 from mysql.connector import Error
 import youtube_dl
 
-#private variables for use, move to .env if making public
+# private variables for use
+# move to .env if making public
 bToken = # bot token
 guildName = # guild name
 channelName = # main channel name
@@ -18,12 +19,11 @@ cogsPath = # cogs path
 pyEx = # python extension
 
 
-#connection to discord
+# Connect to discord
 client = commands.Bot(command_prefix ='#', intents = discord.Intents.all())
 client.remove_command("help")
 
-#cycles in order; status =cycle(['Minecraft', 'Stardew Valley', 'League of Legends', 'Roblox', 'Tiny Royale'])
-#CONSTANTS
+# CONSTANTS
 custEmoji = [
     '<:bearlove:817992135084605450>', 
     '<:cutebear:817992591563685999>',
