@@ -11,11 +11,11 @@ from mysql.connector import Error
 import youtube_dl
 
 #private variables for use, move to .env if making public
-bToken = #bot token
-guildName = #guild name
-channelName = #main channel name
-cogsPath = #cogs path
-pyEx = #python extension
+bToken = # bot token
+guildName = # guild name
+channelName = # main channel name
+cogsPath = # cogs path
+pyEx = # python extension
 
 
 #connection to discord
