@@ -45,11 +45,11 @@ custEmoji = [
     '<:backhug:818679634739986443>',
     ]
 random_statements = [
-    'I wonder if @Cozy has eaten today...',
+    'I wonder if creator has eaten today...',
     "It was so pretty outside " + random.choice(custEmoji),
     "This game is hard :/",
     "I feel like i'm learning new things everyday and it's greattt " + random.choice(custEmoji),
-    "I wonder what @Cozy's doing...",
+    "I wonder what creator's doing...",
     "Listening to Lofi makes me feel warm and fuzzy inside " + random.choice(custEmoji),
     ]
 acts = [
