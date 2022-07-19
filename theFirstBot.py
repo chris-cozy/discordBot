@@ -45,7 +45,7 @@ custEmoji = [
     '<:backhug:818679634739986443>',
     ]
 random_statements = [
-    'I wonder if creator has eaten today...',
+    'I wonder if my creator has eaten today...',
     "It was so pretty outside " + random.choice(custEmoji),
     "This game is hard :/",
     "I feel like i'm learning new things everyday and it's greattt " + random.choice(custEmoji),
